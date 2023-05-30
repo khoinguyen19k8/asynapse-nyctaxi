@@ -1,0 +1,20 @@
+{
+	"name": "5_payment_type",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "USE ny_taxi_discovery;\n\n-- Line-delimited JSON\n\nSELECT\n    CAST(JSON_VALUE(jsonDoc, '$.payment_type') AS SMALLINT) AS payment_type,\n    CAST(JSON_VALUE(jsonDoc, '$.payment_type_desc') AS VARCHAR(15)) AS payment_type\nFROM\n    OPENROWSET(\n        BULK 'payment_type.json',\n        DATA_SOURCE = 'ny_taxi_data_raw',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b',\n        ROWTERMINATOR = '0x0a'\n    )\n    WITH (\n        jsonDoc NVARCHAR(MAX)\n    ) AS payment_type;\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "ny_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
