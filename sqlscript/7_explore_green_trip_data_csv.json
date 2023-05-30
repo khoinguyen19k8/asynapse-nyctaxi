@@ -1,5 +1,5 @@
 {
-	"name": "7_explore_green_trip_data",
+	"name": "7_explore_green_trip_data_csv",
 	"properties": {
 		"folder": {
 			"name": "nyc_taxi/discovery"
