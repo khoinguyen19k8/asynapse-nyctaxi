@@ -1,0 +1,20 @@
+{
+	"name": "2_explore_calendar",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "USE ny_taxi_discovery;\n\nSELECT\n    TOP 100 *\nFROM \n    OPENROWSET(\n        BULK 'calendar.csv',\n        DATA_SOURCE = 'ny_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        FIRSTROW = 2\n    )\nWITH(\n    date_key INT 1,\n    date DATE 2,\n    year SMALLINT 3,\n    month TINYINT 4,\n    day TINYINT 5,\n    day_name VARCHAR(10) 6,\n    day_of_year SMALLINT 7,\n    week_of_month TINYINT 8,\n    week_of_year TINYINT 9,\n    month_name VARCHAR(10) 10,\n    year_month INT 11,\n    year_week INT 12\n) AS [result];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "ny_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
