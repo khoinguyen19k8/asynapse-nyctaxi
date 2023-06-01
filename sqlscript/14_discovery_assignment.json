@@ -1,0 +1,20 @@
+{
+	"name": "14_discovery_assignment",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "USE ny_taxi_discovery;\n\nWITH \n\npayment_info\nAS \n    (\n    SELECT\n        payment_type, payment_type_desc\n    FROM\n        OPENROWSET(\n            BULK 'payment_type.json',\n            DATA_SOURCE = 'ny_taxi_data_raw',\n            FORMAT = 'CSV',\n            FIELDQUOTE = '0x0b',\n            FIELDTERMINATOR ='0x0b',\n            ROWTERMINATOR = '0x0a'\n        )\n        WITH (\n            jsonDoc NVARCHAR(MAX)\n        ) AS payment_type\n        CROSS APPLY OPENJSON(jsonDoc)\n        WITH (\n            payment_type SMALLINT,\n            payment_type_desc VARCHAR(15)\n        )\n    ),\n\ntrip_data\nAS\n    (\n        SELECT\n            PULocationID,\n            payment_type\n        FROM\n            OPENROWSET(\n                BULK 'trip_data_green_parquet/year=2020/month=01/*',\n                DATA_SOURCE = 'ny_taxi_data_raw',\n                FORMAT = 'PARQUET'\n            ) AS trip_data\n    ),\n\ntaxi_zone\nAS\n    (\n        SELECT\n            location_id,\n            borough\n        FROM\n            OPENROWSET(\n                BULK 'taxi_zone.csv',\n                DATA_SOURCE = 'ny_taxi_data_raw',\n                FORMAT = 'CSV',\n                PARSER_VERSION = '2.0',\n                FIRSTROW = 2\n            )\n            WITH (\n                location_id SMALLINT 1,\n                borough VARCHAR(15) 2,\n                zone VARCHAR(50) 3,\n                service_zone VARCHAR(15) 4\n            ) AS taxi_zone\n    )\n\n\nSELECT\n    TOP 100\n    taxi_zone.borough,\n    COUNT(1) AS total_trips\nFROM\n    trip_data \n        JOIN \n    taxi_zone\n        ON trip_data.PULocationID = taxi_zone.location_id\n        JOIN\n    payment_info\n        ON payment_info.payment_type = trip_data.payment_type\nGROUP BY taxi_zone.borough;\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "ny_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
