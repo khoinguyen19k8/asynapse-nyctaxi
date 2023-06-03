@@ -1,0 +1,20 @@
+{
+	"name": "8_explore_green_trip_data_parquet",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "USE ny_taxi_discovery;\n\nSELECT\n    result.filename() AS file_name,\n    result.filepath() AS file_path,\n    COUNT(*) AS record_count\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_parquet/year=*/month=*/*',\n        DATA_SOURCE = 'ny_taxi_data_raw',\n        FORMAT = 'PARQUET'\n    )\n    WITH (\n        trip_amount FLOAT,\n        trip_type INT\n    ) AS [result]\nWHERE \n    result.filepath(1) = '2021' AND\n    result.filepath(2) IN ('06', '07', '08')\nGROUP BY\n    result.filename(), result.filepath()\nORDER BY\n    result.filename(), result.filepath();",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "ny_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

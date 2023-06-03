@@ -1,0 +1,20 @@
+{
+	"name": "9_explore_green_trip_data_delta",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/discovery"
+		},
+		"content": {
+			"query": "USE ny_taxi_discovery;\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_delta/',\n        DATA_SOURCE = 'ny_taxi_data_raw',\n        FORMAT = 'DELTA'\n    )\nWITH\n    (\n        tip_amount FLOAT,\n        trip_type INT,\n        year VARCHAR(4),\n        month VARCHAR(2)\n    ) AS trip_data\nWHERE\n    year = '2021' AND month IN ('06', '07', '08');",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "ny_taxi_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
