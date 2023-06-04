@@ -5,12 +5,12 @@
 			"name": "nyc_taxi/ldw"
 		},
 		"content": {
-			"query": "USE nyc_taxi_ldw;\nGO\n\n-- Drop tables\n\nIF OBJECT_ID('silver.vendor') IS NOT NULL\n    DROP EXTERNAL TABLE silver.vendor\nGO\n\n-- Create silver vendor\nGO\n\nCREATE EXTERNAL TABLE silver.vendor\nWITH (\n    DATA_SOURCE = nyc_taxi_src,\n    LOCATION = 'silver/vendor',\n    FILE_FORMAT = parquet_file_format\n)\nAS\nSELECT\n    *\nFROM\n    bronze.vendor;",
+			"query": "USE nyc_taxi_ldw;\nGO\n\n-- Drop tables\n\nIF OBJECT_ID('silver.trip_data_green') IS NOT NULL\n    DROP EXTERNAL TABLE silver.trip_data_green\nGO\n\n-- Create silver trip_data_green\nGO\n\nCREATE EXTERNAL TABLE silver.trip_data_green\nWITH (\n    DATA_SOURCE = nyc_taxi_src,\n    LOCATION = 'silver/trip_data_green',\n    FILE_FORMAT = parquet_file_format\n)\nAS\nSELECT\n    *\nFROM\n    bronze.trip_data_green_csv;",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "nyc_taxi_ldw",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
