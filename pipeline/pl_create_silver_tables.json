@@ -118,19 +118,6 @@
 			}
 		],
 		"concurrency": 1,
-		"variables": {
-			"v_folder_path": {
-				"type": "String",
-				"defaultValue": "silver/taxi_zone"
-			},
-			"v_usp_name": {
-				"type": "String",
-				"defaultValue": "silver.usp_silver_taxi_zone"
-			},
-			"v_folder_path_usp_name_array": {
-				"type": "Array"
-			}
-		},
 		"annotations": []
 	}
 }
