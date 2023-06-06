@@ -112,7 +112,8 @@
 					"dataset": {
 						"referenceName": "ds_folder_path_usp_name",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
