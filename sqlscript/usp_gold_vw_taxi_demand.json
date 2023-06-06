@@ -1,0 +1,20 @@
+{
+	"name": "usp_gold_vw_taxi_demand",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi/ldw/usp"
+		},
+		"content": {
+			"query": "USE nyc_taxi_ldw;\nGO\n\nCREATE OR ALTER PROCEDURE gold.usp_gold_vw_taxi_demand\nAS\nBEGIN\n    DECLARE @create_sql_stmt NVARCHAR(MAX),\n            @drop_sql_stmt NVARCHAR(MAX)\n\n    SET @drop_sql_stmt = 'DROP VIEW IF EXISTS gold.vw_taxi_demand';\n    EXEC sp_executesql @drop_sql_stmt\n    SET @create_sql_stmt = '\n        CREATE VIEW gold.vw_taxi_demand\n        AS\n        SELECT\n            result.filepath(1) AS year,\n            result.filepath(2) AS month,\n            result.*\n        FROM\n                OPENROWSET(\n                BULK ''gold/taxi_demand/year=*/month=*/*.parquet'',\n                DATA_SOURCE = ''nyc_taxi_src'',\n                FORMAT = ''PARQUET''\n            )\n            WITH (\n                borough VARCHAR(15),\n                trip_date DATE,\n                trip_day VARCHAR(10),\n                trip_day_weekend_ind CHAR(1),\n                street_hail_trip_count INT,\n                dispatch_trip_count INT,\n                total_trip_distance FLOAT,\n                avg_trip_duration_hr DECIMAL(10,4),\n                total_fare_amount FLOAT\n            ) AS [result]';\n    EXEC sp_executesql @create_sql_stmt\n\nEND;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_ldw",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
