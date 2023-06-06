@@ -1,5 +1,5 @@
 {
-	"name": "4_usp_create_silver_taxi_zone",
+	"name": "usp_create_silver_taxi_zone",
 	"properties": {
 		"folder": {
 			"name": "nyc_taxi/ldw/usp"
