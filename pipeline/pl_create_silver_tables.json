@@ -118,6 +118,9 @@
 			}
 		],
 		"concurrency": 1,
+		"folder": {
+			"name": "demo"
+		},
 		"annotations": []
 	}
 }
